@@ -8,14 +8,6 @@ const Post = sequelize.define('Post', {
         autoIncrement: true
     },
     description: DataTypes.STRING,
-    created_by: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        references: {
-            model: 'User',
-            key: 'id',
-            allowNull: false
-        }
-    },
     like_count: {
         type: DataTypes.INTEGER.UNSIGNED,
         defaultValue: 0,
@@ -24,12 +16,25 @@ const Post = sequelize.define('Post', {
         type: DataTypes.INTEGER.UNSIGNED,
         defaultValue: 0,
     },
+    created_by: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+            model: 'User',
+            key: 'id',
+            allowNull: false
+        }
+    },
     created_at: {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
     },
     updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+    },
+    deleted_at:{
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
