@@ -13,7 +13,7 @@ app.use(cors(
         credentials: true
     }
 ));
-// app.use('/api', apiRoutes);
+app.use('/api', apiRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
