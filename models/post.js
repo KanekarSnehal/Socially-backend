@@ -39,3 +39,5 @@ const Post = sequelize.define('Post', {
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
 });
+
+module.exports = Post;

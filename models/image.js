@@ -39,4 +39,6 @@ const Image = sequelize.define('Image', {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
-})
+});
+
+module.exports = Image;

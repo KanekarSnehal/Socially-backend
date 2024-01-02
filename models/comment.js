@@ -42,4 +42,6 @@ const Comment = sequelize.define('Comment', {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
-})
+});
+
+module.exports = Comment;
