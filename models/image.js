@@ -38,6 +38,5 @@ const Image = sequelize.define('Image', {
     deleted_at:{
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false,
     }
 })

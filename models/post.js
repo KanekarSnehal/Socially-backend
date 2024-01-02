@@ -37,6 +37,5 @@ const Post = sequelize.define('Post', {
     deleted_at:{
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false,
     }
 });
