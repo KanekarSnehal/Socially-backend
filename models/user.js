@@ -14,6 +14,11 @@ const User = sequelize.define('User', {
         unique: true,
         allowNull: false
     },
+    email_id: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
     password: DataTypes.STRING,
     profile_image: DataTypes.STRING,
     created_at: {
