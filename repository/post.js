@@ -11,6 +11,7 @@ async function getPostById(postId) {
         return response;
     } catch (error) {
         console.log(`[post respository - getPostById] Error: ${error}`);
+        throw Error(error);
     }
 }
 
@@ -24,6 +25,7 @@ async function getPostByUserId(userId) {
         return response;
     } catch (error) {
         console.log(`[post respository - getPostById] Error: ${error}`);
+        throw Error(error);
     }
 }
 
@@ -37,6 +39,7 @@ async function getFolllowingUsersPost() {
         return response;
     } catch (error) {
         console.log(`[post respository - getFolllowingUsersPost] Error: ${error}`);
+        throw Error(error);
     }
 }
 
@@ -46,6 +49,55 @@ async function getExplorePost() {
         return response;
     } catch (error) {
         console.log(`[post respository - getExplorePost] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
+async function createPost(description, created_by) {
+    try {
+        const response = await postModel.create(
+            {
+                description,
+                created_by
+            }
+        );
+        return response;
+    } catch (error) {
+        console.log(`[post respository - createPost] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
+async function updatePost(description, postId) {
+    try {
+        const response = await postModel.update(
+            { description },
+            {
+                where:
+                {
+                    id: postId
+                }
+            });
+        return response;
+    } catch (error) {
+        console.log(`[post respository - updatePost] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
+async function deletePost(postId) {
+    try {
+        const response = await postModel.destroy(
+            {
+                where:
+                {
+                    id: postId
+                }
+            });
+        return response;
+    } catch (error) {
+        console.log(`[post respository - deletePost] Error: ${error}`);
+        throw Error(error);
     }
 }
 
@@ -54,4 +106,7 @@ module.exports = {
     getPostByUserId,
     getFolllowingUsersPost,
     getExplorePost,
+    createPost,
+    updatePost,
+    deletePost
 }
