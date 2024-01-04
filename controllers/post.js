@@ -1,4 +1,4 @@
-const { post: postRepository } = require('../repository');
+const { post: postRepository, like: likeRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes')
 
 async function getPost(req, res) {
@@ -25,6 +25,16 @@ async function getPost(req, res) {
 async function getFollowingUsersPost(req, res) {
     try {
         const post = await postRepository.getFolllowingUsersPost();
+        const postIds = post.map(p => p.id);
+        const likesData = await likeRepository.getLikesByPostId(postIds);
+        post.forEach(p => {
+            if (likesData.some(ld => ld.post_id == p.id)) {
+                p.setDataValue('is_liked', true);
+                p.setDataValue('like_count', p.getDataValue('like_count') + 1);
+            }
+            else
+                p.setDataValue('is_liked', false);
+        });
 
         res.send({
             status: 'success',

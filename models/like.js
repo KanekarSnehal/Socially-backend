@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 const Post = require('./post');
 const User = require('./user');
 
-const Like = sequelize.define('Like', {
+const Likes = sequelize.define('Likes', {
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -37,10 +37,10 @@ const Like = sequelize.define('Like', {
     }
 });
 
-Like.belongsTo(Post, { foreignKey: 'post_id', as: 'likes' });
-Post.hasMany(Like, { foreignKey: 'post_id', as: 'likes' });
+Likes.belongsTo(Post, { foreignKey: 'post_id', as: 'likes' });
+Post.hasMany(Likes, { foreignKey: 'post_id', as: 'likes' });
 
-Like.belongsTo(User, { foreignKey: 'created_by', as: 'liked_by'});
-User.hasMany(Like, { foreignKey: 'created_by', as: 'liked_by'});
+Likes.belongsTo(User, { foreignKey: 'created_by', as: 'liked_by'});
+User.hasMany(Likes, { foreignKey: 'created_by', as: 'liked_by'});
 
-module.exports = Like;
+module.exports = Likes;
