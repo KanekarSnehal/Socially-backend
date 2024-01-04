@@ -1,5 +1,7 @@
 const sequelize = require('../connections/mysql');
 const { DataTypes } = require('sequelize');
+const Post = require('./post');
+const User = require('./user');
 
 const Bookmark = sequelize.define('Bookmark', {
     id: {
@@ -32,11 +34,13 @@ const Bookmark = sequelize.define('Bookmark', {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
-    },
-    deleted_at:{
-        type: 'TIMESTAMP',
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
 });
+
+Bookmark.belongsTo(Post, { foreignKey: 'post_id' });
+Post.hasMany(Bookmark, { foreignKey: 'post_id' });
+
+Bookmark.belongsTo(User, { foreignKey: 'created_by', as: 'bookmarked_by' });
+User.hasMany(Bookmark, { foreignKey: 'created_by', as: 'bookmarked_by' });
 
 module.exports = Bookmark;

@@ -4,7 +4,8 @@ const
     {
         post: { getFollowingUsersPost, getExplorePost, getPost, createPost, updatePost, deletePost, getPostByUserName },
         comment: { createComment, updateComment },
-        like: { createLike, deleteLike }
+        like: { createLike, deleteLike },
+        bookmark: { createBookmark, deleteBookmark }
     } = require('../controllers');
 
 router.get('/following', getFollowingUsersPost);
@@ -25,5 +26,8 @@ router.delete('/:postId/comments/:commentId', updateComment);
 
 router.post('/:postId/like', createLike);
 router.delete('/:postId/dislike', deleteLike);
+
+router.post('/:postId/bookmark', createBookmark);
+router.delete('/:postId/unbookmark', deleteBookmark);
 
 module.exports = router;

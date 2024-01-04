@@ -1,4 +1,4 @@
-const { post: postRepository, like: likeRepository } = require('../repository');
+const { post: postRepository, like: likeRepository, bookmark: bookmarkRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes')
 
 async function getPost(req, res) {
@@ -27,6 +27,7 @@ async function getFollowingUsersPost(req, res) {
         const post = await postRepository.getFolllowingUsersPost();
         const postIds = post.map(p => p.id);
         const likesData = await likeRepository.getLikesByPostId(postIds);
+        const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds);
         post.forEach(p => {
             if (likesData.some(ld => ld.post_id == p.id)) {
                 p.setDataValue('is_liked', true);
@@ -34,6 +35,14 @@ async function getFollowingUsersPost(req, res) {
             }
             else
                 p.setDataValue('is_liked', false);
+
+            if (bookmarkData.some(bd => bd.post_id == p.id)) {
+                p.setDataValue('is_bookmarked', true);
+                const bookmarkCount = p.getDataValue('bookmark_count');
+                bookmarkCount ? p.setDataValue('bookmark_count', bookmarkCount + 1) : p.setDataValue('bookmark_count', 1);
+            }
+            else
+                p.setDataValue('is_bookmarked', false);
         });
 
         res.send({
