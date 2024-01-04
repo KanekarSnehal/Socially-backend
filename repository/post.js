@@ -1,4 +1,4 @@
-const { post: postModel, user: userModel } = require('../models');
+const { post: postModel, user: userModel, comment: commentModel } = require('../models');
 const sequelize = require('../connections/mysql')
 
 /**
@@ -44,8 +44,25 @@ async function getFolllowingUsersPost() {
                         id: sequelize.literal('Post.created_by'),
                     },
                     attributes: ['user_name', 'full_name', 'profile_image'],
-                    required: true
-                }
+                    required: true,
+                    as: 'creator'
+                },
+                {
+                    model: commentModel,
+                    as: 'comments', // 'comments' is an alias for the Comment model in the join
+                    attributes: ['id', 'content', 'created_by', 'created_at'], // Specify the attributes you want to retrieve from the Comment model
+                    include: [
+                        {
+                            model: userModel,
+                            // on: {
+                            //     id: sequelize.literal('Comment.created_by'),
+                            // },
+                            attributes: ['user_name', 'full_name', 'profile_image'],
+                            required: true,
+                            as: 'creator'
+                        },
+                    ]
+                },
             ]
         });
         return response;

@@ -1,5 +1,7 @@
 const sequelize = require('../connections/mysql');
 const { DataTypes } = require('sequelize');
+const Post = require('./post');
+const User = require('./user');
 
 const Comment = sequelize.define('Comment', {
     id: {
@@ -16,7 +18,6 @@ const Comment = sequelize.define('Comment', {
         references: {
             model: 'Post',
             key: 'id',
-            allowNull: false
         },
         allowNull: false
     },
@@ -25,8 +26,8 @@ const Comment = sequelize.define('Comment', {
         references: {
             model: 'User',
             key: 'id',
-            allowNull: false
-        }
+        },
+        allowNull: false
     },
     created_at: {
         type: 'TIMESTAMP',
@@ -43,5 +44,11 @@ const Comment = sequelize.define('Comment', {
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
 });
+
+Comment.belongsTo(Post, { foreignKey: 'post_id', as: 'comments' });
+Post.hasMany(Comment, { foreignKey: 'post_id', as: 'comments' });
+
+User.hasMany(Comment, { foreignKey: 'created_by' });
+Comment.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
 module.exports = Comment;
