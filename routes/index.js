@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { auth: { authenticateUser } } = require('../middlewares');
 
-router.use('/posts', require('./post'));
 router.use('/auth', require('./auth'));
+router.use(authenticateUser);
+router.use('/posts', require('./post'));
 
 module.exports = router;

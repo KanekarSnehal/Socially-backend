@@ -2,6 +2,7 @@ const { comment: commentRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes');
 
 async function createComment(req, res) {
+    const { user_id } = req.user;
     try {
         const { postId } = req.params;
         const { action, data } = req.body;
@@ -10,7 +11,7 @@ async function createComment(req, res) {
             message: 'action/data/postId is missing/invalid in request body'
         });
 
-        await commentRepository.createComment(data[0].content, postId, 1);
+        await commentRepository.createComment(data[0].content, postId, user_id);
 
         res.send({
             status: 'success',

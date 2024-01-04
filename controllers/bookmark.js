@@ -2,6 +2,7 @@ const { bookmark: bookmarkRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes');
 
 async function createBookmark(req, res) {
+    const { user_id } = req.user;
     try {
         const { postId } = req.params;
         if (!postId) return res.status(StatusCodes.BAD_REQUEST).json({
@@ -9,7 +10,7 @@ async function createBookmark(req, res) {
             message: 'postId is missing/invalid in request body'
         });
 
-        await bookmarkRepository.createBookmark(postId, 1);
+        await bookmarkRepository.createBookmark(postId, user_id);
 
         res.send({
             status: 'success',
@@ -27,12 +28,14 @@ async function createBookmark(req, res) {
 async function deleteBookmark(req, res) {
     try {
         const { postId } = req.params;
+        const { user_id } = req.user;
+
         if (!postId) return res.status(StatusCodes.BAD_REQUEST).json({
             status: 'failure',
             message: 'postId is missing/invalid in request body'
         });
 
-        await bookmarkRepository.deleteBookmark(postId, 1);
+        await bookmarkRepository.deleteBookmark(postId, user_id);
 
         res.send({
             status: 'success',

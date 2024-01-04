@@ -10,7 +10,7 @@ async function findUserByEmailIdAndUserName(emailId, userName) {
                     { user_name: userName }
                 ]
             },
-            attributes: ['email_id', 'password', 'profile_image', 'full_name', 'user_name'],
+            attributes: ['email_id', 'password', 'profile_image', 'full_name', 'user_name', 'id'],
         });
         return response;
     } catch (error) {

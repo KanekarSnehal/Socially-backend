@@ -34,7 +34,8 @@ async function loginHandler(req, res) {
             email_id: user.email_id,
             role: user.role,
             full_name: user.full_name,
-            user_name: user.user_name
+            user_name: user.user_name,
+            user_id: user.id
         };
 
         const access_token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: JWT_TOKEN_EXPIRY });

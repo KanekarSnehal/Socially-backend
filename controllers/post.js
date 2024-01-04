@@ -70,12 +70,13 @@ async function getExplorePost(req, res) {
 async function createPost(req, res) {
     try {
         const { action, data } = req.body;
+        const { user_id } = req.user;
         if (!action || !data || action != 'create') return res.status(StatusCodes.BAD_REQUEST).json({
             status: 'failure',
             message: 'action/data is missing in request body'
         });
 
-        await postRepository.createPost(data[0].description, 1);
+        await postRepository.createPost(data[0].description, user_id);
 
         res.send({
             status: 'success',

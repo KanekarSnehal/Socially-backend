@@ -2,6 +2,7 @@ const { like: likeRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes');
 
 async function createLike(req, res) {
+    const { user_id } = req.user;
     try {
         const { postId } = req.params;
         if (!postId) return res.status(StatusCodes.BAD_REQUEST).json({
@@ -9,7 +10,7 @@ async function createLike(req, res) {
             message: 'postId is missing/invalid in request body'
         });
 
-        await likeRepository.createLike(postId, 1);
+        await likeRepository.createLike(postId, user_id);
 
         res.send({
             status: 'success',
@@ -25,6 +26,7 @@ async function createLike(req, res) {
 }
 
 async function deleteLike(req, res) {
+    const { user_id } = req.user;
     try {
         const { postId } = req.params;
         if (!postId) return res.status(StatusCodes.BAD_REQUEST).json({
@@ -32,7 +34,7 @@ async function deleteLike(req, res) {
             message: 'postId is missing/invalid in request body'
         });
 
-        await likeRepository.deleteLike(postId, 1);
+        await likeRepository.deleteLike(postId, user_id);
 
         res.send({
             status: 'success',
