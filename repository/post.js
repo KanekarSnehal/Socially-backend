@@ -36,7 +36,18 @@ async function getPostByUserId(userId) {
  */
 async function getFolllowingUsersPost() {
     try {
-        const response = await postModel.findAll();
+        const response = await postModel.findAll({
+            include: [
+                {
+                    model: userModel,
+                    on: {
+                        id: sequelize.literal('Post.created_by'),
+                    },
+                    attributes: ['user_name', 'full_name', 'profile_image'],
+                    required: true
+                }
+            ]
+        });
         return response;
     } catch (error) {
         console.log(`[post respository - getFolllowingUsersPost] Error: ${error}`);
@@ -108,7 +119,7 @@ async function getPostByUserName(userName) {
             include: [
                 {
                     model: userModel,
-                    attributes: [],
+                    attributes: ['user_name', 'full_name', 'profile_image'],
                     on: {
                         id: sequelize.literal('`Post`.`created_by`')
                     },
