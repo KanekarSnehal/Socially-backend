@@ -1,5 +1,6 @@
 const sequelize = require('../connections/mysql');
 const { DataTypes } = require('sequelize');
+const User = require('./user');
 
 const Post = sequelize.define('Post', {
     id: {
@@ -31,5 +32,8 @@ const Post = sequelize.define('Post', {
         type: 'TIMESTAMP',
     }
 });
+
+User.hasMany(Post, { foreignKey: 'created_by' });
+Post.belongsTo(User, { foreignKey: 'created_by' });
 
 module.exports = Post;
