@@ -118,11 +118,35 @@ async function deletePost(req, res) {
     }
 }
 
+async function getPostByUserName(req, res) {
+    try {
+        const { user_name } = req.params;
+        if (!user_name) return res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: 'user_name is invalid'
+        });
+
+        const post = await postRepository.getPostByUserName(user_name);
+
+        res.send({
+            status: 'success',
+            data: post
+        });
+    } catch (error) {
+        console.log(`[post controller - getPostByUserName] Error: ${error}`);
+        res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     getPost,
     getFollowingUsersPost,
     getExplorePost,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getPostByUserName
 }

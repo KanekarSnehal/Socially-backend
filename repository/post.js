@@ -1,4 +1,5 @@
-const { post: postModel } = require('../models');
+const { post: postModel, user: userModel } = require('../models');
+const sequelize = require('../connections/mysql')
 
 /**
  * @typedef Post
@@ -101,6 +102,30 @@ async function deletePost(postId) {
     }
 }
 
+async function getPostByUserName(userName) {
+    try {
+        const response = await postModel.findAll({
+            include: [
+                {
+                    model: userModel,
+                    attributes: [],
+                    on: {
+                        id: sequelize.literal('`Post`.`created_by`')
+                    },
+                    where: {
+                        user_name: userName
+                    },
+                    required: true // This ensures that the join is an INNER JOIN, similar to the LEFT JOIN in SQL
+                }
+            ],
+        });
+        return response;
+    } catch (error) {
+        console.log(`[post respository - getPostByUserName] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
 module.exports = {
     getPostById,
     getPostByUserId,
@@ -108,5 +133,6 @@ module.exports = {
     getExplorePost,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getPostByUserName
 }
