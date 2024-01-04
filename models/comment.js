@@ -38,10 +38,6 @@ const Comment = sequelize.define('Comment', {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
-    },
-    deleted_at:{
-        type: 'TIMESTAMP',
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     }
 });
 
