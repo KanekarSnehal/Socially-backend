@@ -40,10 +40,7 @@ async function getFolllowingUsersPost() {
             include: [
                 {
                     model: userModel,
-                    on: {
-                        id: sequelize.literal('Post.created_by'),
-                    },
-                    attributes: ['user_name', 'full_name', 'profile_image'],
+                    attributes: ['user_name', 'full_name', 'profile_image', 'id'],
                     required: true,
                     as: 'creator'
                 },
@@ -54,10 +51,7 @@ async function getFolllowingUsersPost() {
                     include: [
                         {
                             model: userModel,
-                            // on: {
-                            //     id: sequelize.literal('Comment.created_by'),
-                            // },
-                            attributes: ['user_name', 'full_name', 'profile_image'],
+                            attributes: ['user_name', 'full_name', 'profile_image', 'id'],
                             required: true,
                             as: 'creator'
                         },
@@ -143,6 +137,7 @@ async function getPostByUserName(userName) {
                     where: {
                         user_name: userName
                     },
+                    as: 'creator',
                     required: true // This ensures that the join is an INNER JOIN, similar to the LEFT JOIN in SQL
                 }
             ],
