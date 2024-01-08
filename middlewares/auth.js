@@ -10,12 +10,12 @@ const { StatusCodes } = require('../utils/statusCodes');
  */
 function authenticateUser(req, res, next) {
     // Get the access token from the cookie
-    const access_token = req.headers.cookie.split('=')[1];
+    const access_token = req.headers.cookie ? req.headers.cookie.split('=')[1] : null;
 
     // Check if the token exists
     if (!access_token) return res.status(StatusCodes.UNAUTHORIZED).send({
         message: 'Access denied. No token provided.',
-        status: 'success'
+        status: 'failure'
     });
 
     try {
@@ -29,9 +29,10 @@ function authenticateUser(req, res, next) {
         console.log("authenticateUser Middleware", error);
         return res.status(StatusCodes.UNAUTHORIZED).send({
             message: error.message,
-            status: 'success'
+            status: 'failure'
         });
     }
+
 }
 
 module.exports = {
