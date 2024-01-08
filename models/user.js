@@ -21,6 +21,8 @@ const User = sequelize.define('User', {
     },
     password: DataTypes.STRING,
     profile_image: DataTypes.STRING,
+    website: DataTypes.STRING,
+    bio: DataTypes.STRING,
     created_at: {
         type: 'TIMESTAMP',
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
