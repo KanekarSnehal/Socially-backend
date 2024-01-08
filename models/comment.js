@@ -41,7 +41,7 @@ const Comment = sequelize.define('Comment', {
     }
 });
 
-Comment.belongsTo(Post, { foreignKey: 'post_id', as: 'comments' });
+Comment.belongsTo(Post, { foreignKey: 'post_id' });
 Post.hasMany(Comment, { foreignKey: 'post_id', as: 'comments' });
 
 User.hasMany(Comment, { foreignKey: 'created_by' });

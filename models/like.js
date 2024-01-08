@@ -37,10 +37,10 @@ const Likes = sequelize.define('Likes', {
     }
 });
 
-Likes.belongsTo(Post, { foreignKey: 'post_id', as: 'likes' });
-Post.hasMany(Likes, { foreignKey: 'post_id', as: 'likes' });
+Likes.belongsTo(Post, { foreignKey: 'post_id' });
+Post.hasMany(Likes, { foreignKey: 'post_id', as: 'likes', onDelete: 'CASCADE' });
 
-Likes.belongsTo(User, { foreignKey: 'created_by', as: 'liked_by'});
-User.hasMany(Likes, { foreignKey: 'created_by', as: 'liked_by'});
+Likes.belongsTo(User, { foreignKey: 'created_by', as: 'liked_by' });
+User.hasMany(Likes, { foreignKey: 'created_by', onDelete: 'CASCADE' });
 
 module.exports = Likes;

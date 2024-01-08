@@ -33,7 +33,7 @@ const Post = sequelize.define('Post', {
     }
 });
 
-User.hasMany(Post, { foreignKey: 'created_by', as: 'creator' });
+User.hasMany(Post, { foreignKey: 'created_by' });
 Post.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
 module.exports = Post;
