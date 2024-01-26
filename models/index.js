@@ -4,6 +4,7 @@ const comment = require('./comment');
 const bookmark = require('./bookmark');
 const image = require('./image');
 const like = require('./like');
+const follow = require('./follow');
 
 module.exports = {
     user,
@@ -11,5 +12,6 @@ module.exports = {
     comment,
     bookmark,
     image,
-    like
+    like,
+    follow
 }
