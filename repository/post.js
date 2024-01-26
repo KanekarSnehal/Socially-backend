@@ -131,15 +131,25 @@ async function getPostByUserName(userName) {
                 {
                     model: userModel,
                     attributes: ['user_name', 'full_name', 'profile_image'],
-                    on: {
-                        id: sequelize.literal('`Post`.`created_by`')
-                    },
                     where: {
                         user_name: userName
                     },
                     as: 'creator',
                     required: true // This ensures that the join is an INNER JOIN, similar to the LEFT JOIN in SQL
-                }
+                },
+                {
+                    model: commentModel,
+                    as: 'comments', // 'comments' is an alias for the Comment model in the join
+                    attributes: ['id', 'content', 'created_by', 'created_at'], // Specify the attributes you want to retrieve from the Comment model
+                    include: [
+                        {
+                            model: userModel,
+                            attributes: ['user_name', 'full_name', 'profile_image', 'id'],
+                            required: true,
+                            as: 'creator'
+                        },
+                    ]
+                },
             ],
         });
         return response;
