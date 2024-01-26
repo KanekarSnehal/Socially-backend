@@ -1,4 +1,4 @@
-const { user: UserModel } = require('../models');
+const { user: UserModel, follow: FollowModel } = require('../models');
 const { Op } = require('sequelize');
 
 async function findUserByEmailIdAndUserName(emailId, userName) {
@@ -62,9 +62,42 @@ async function createUser(userDetails) {
     }
 }
 
-async function getUsersToFollow() {
+async function getUsersToFollow(userId, search_key = '') {
+    const whereClause = {
+        id: {
+            [Op.ne]: userId   // Exclude the current user from the result
+        }
+    }
+    if(search_key) {
+        whereClause[Op.or] = [
+            {
+                full_name: {
+                    [Op.like]: search_key
+                }
+            },
+            {
+                user_name: {
+                    [Op.like]: search_key
+                }
+            }
+        ]
+    }
     try {
-        const response = await UserModel.findAll();
+        const response = await UserModel.findAll({
+            include: {
+                model: FollowModel,
+                attributes: [],
+                required: false,
+                where: {
+                    current_user: userId,
+                    id: {
+                        [Op.is]: null   // Check for null values in the 'following' table
+                    }
+                }
+            },
+            attributes: ['profile_image', 'full_name', 'user_name', 'id', 'website', 'bio'],
+            where: whereClause,
+        });
         return response;
     } catch (error) {
         console.log(`[user respository - getUsersToFollow] Error: ${error}`);
