@@ -3,11 +3,13 @@ const { StatusCodes } = require('../utils/statusCodes');
 
 async function getUsersToFollow(req, res) {
     try {
-        const user = await userRepository.getUsersToFollow();
+        const { user_id } = req.user;
+        const { search_key } = req.query;
+        const users = await userRepository.getUsersToFollow(user_id, search_key);
 
         res.send({
             status: 'success',
-            data: user
+            data: users
         });
     } catch (error) {
         console.log(`[user controller - getUsersToFollow] Error: ${error}`);
