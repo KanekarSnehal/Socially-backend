@@ -105,10 +105,29 @@ async function getUsersToFollow(userId, search_key = '') {
     }
 }
 
+async function followUnfollowUser(followUnfollowUserId, action, userId) {
+    try {
+        const response = action == 'follow' ? await FollowModel.create({
+            current_user: userId,
+            following_user: followUnfollowUserId
+        }) : await FollowModel.destroy({
+            where: {
+                current_user: userId,
+                following_user: followUnfollowUserId
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log(`[user respository - followUnfollowUser] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
 module.exports = {
     findUserByEmailIdAndUserName,
     findUserByUserName,
     createUser,
     getUsersToFollow,
-    updateUser
+    updateUser,
+    followUnfollowUser
 }

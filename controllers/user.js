@@ -62,8 +62,35 @@ async function updateUser(req, res) {
     }
 }
 
+async function followUnfollowUser(req, res) {
+    try {
+        const { followUnfollowUserId } = req.params;
+        const { action } = req.body;
+        const { user_id } = req.user;
+
+        if (!followUnfollowUserId || !action) return res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: 'action/followUnfollowUserId is missing/invalid'
+        });
+
+        const user = await userRepository.followUnfollowUser(followUnfollowUserId, action, user_id);
+
+        res.send({
+            status: 'success',
+            message: `User ${action}ed successfully`
+        });
+    } catch (error) {
+        console.log(`[user controller - followUnfollowUser] Error: ${error}`);
+        res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     getUsersToFollow,
     findUserByUserName,
-    updateUser
+    updateUser,
+    followUnfollowUser
 }

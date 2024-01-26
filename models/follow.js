@@ -6,6 +6,7 @@ const Follow = sequelize.define('Follow', {
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
+        autoIncrement: true
     },
     current_user: {
         type: DataTypes.INTEGER.UNSIGNED,
