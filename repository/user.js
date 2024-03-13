@@ -26,6 +26,18 @@ async function findUserByUserName(userName) {
                 user_name: userName
             },
             attributes: ['email_id', 'profile_image', 'full_name', 'user_name', 'id', 'website', 'bio'],
+            include: [
+                {
+                    model: FollowModel,
+                    as: 'following',
+                    attributes: ['following_user'],
+                },
+                {
+                    model: FollowModel,
+                    as: 'follower',
+                    attributes: ['following_user'],
+                },
+            ],
         });
         return response;
     } catch (error) {
