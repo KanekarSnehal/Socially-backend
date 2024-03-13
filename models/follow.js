@@ -36,10 +36,10 @@ const Follow = sequelize.define('Follow', {
     }
 });
 
-User.hasMany(Follow, { foreignKey: 'current_user' });
+User.hasMany(Follow, { foreignKey: 'current_user', as: 'following' });
 Follow.hasMany(User, { foreignKey: 'current_user', as: 'following' });
 
-User.hasMany(Follow, { foreignKey: 'following_user' });
+User.hasMany(Follow, { foreignKey: 'following_user', as: 'follower' });
 Follow.hasMany(User, { foreignKey: 'following_user', as: 'follower' });
 
 module.exports = Follow;
