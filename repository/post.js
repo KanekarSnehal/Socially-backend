@@ -1,4 +1,4 @@
-const { post: postModel, user: userModel, comment: commentModel } = require('../models');
+const { post: postModel, user: userModel, comment: commentModel, follow: followModel } = require('../models');
 const sequelize = require('../connections/mysql')
 
 /**
@@ -34,15 +34,15 @@ async function getPostByUserId(userId) {
  * get all post
  * @returns 
  */
-async function getFolllowingUsersPost() {
+async function getFolllowingUsersPost(followingUsers) {
     try {
         const response = await postModel.findAll({
             include: [
                 {
                     model: userModel,
                     attributes: ['user_name', 'full_name', 'profile_image', 'id'],
-                    required: true,
-                    as: 'creator'
+                    required: true, // This ensures that the join is an INNER JOIN, similar to the LEFT JOIN in SQL
+                    as: 'creator',
                 },
                 {
                     model: commentModel,
@@ -57,7 +57,10 @@ async function getFolllowingUsersPost() {
                         },
                     ]
                 },
-            ]
+            ],
+            where: {
+                created_by: followingUsers
+            }
         });
         return response;
     } catch (error) {

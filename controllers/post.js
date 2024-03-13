@@ -1,4 +1,4 @@
-const { post: postRepository, like: likeRepository, bookmark: bookmarkRepository } = require('../repository');
+const { post: postRepository, like: likeRepository, bookmark: bookmarkRepository, user: userRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes')
 
 async function getPost(req, res) {
@@ -24,7 +24,9 @@ async function getPost(req, res) {
 
 async function getFollowingUsersPost(req, res) {
     try {
-        const post = await postRepository.getFolllowingUsersPost();
+        const { user_id } = req.user;
+        const followingUsers = await userRepository.getFollowingUsers(user_id);
+        const post = await postRepository.getFolllowingUsersPost(followingUsers.map(u => u.following_user));
         const postIds = post.map(p => p.id);
         const likesData = await likeRepository.getLikesByPostId(postIds);
         const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds);
@@ -51,6 +53,10 @@ async function getFollowingUsersPost(req, res) {
         });
     } catch (error) {
         console.log(`[post controller - getFolllowingUsersPost] Error: ${error}`);
+        res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: error.message
+        });
     }
 }
 
