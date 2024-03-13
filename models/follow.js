@@ -34,6 +34,14 @@ const Follow = sequelize.define('Follow', {
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
     }
+}, {
+    // Add unique constraint on the combination of current_user and following_user
+    indexes: [
+        {
+            unique: true,
+            fields: ['current_user', 'following_user']
+        }
+    ]
 });
 
 User.hasMany(Follow, { foreignKey: 'current_user', as: 'following' });
