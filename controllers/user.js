@@ -5,7 +5,8 @@ async function getUsersToFollow(req, res) {
     try {
         const { user_id } = req.user;
         const { search_key } = req.query;
-        const users = await userRepository.getUsersToFollow(user_id, search_key);
+        const followingUsers = await userRepository.getFollowingUsers(user_id);
+        const users = await userRepository.getUsersToFollow(user_id, followingUsers.map(u => u.following_user), search_key);
 
         res.send({
             status: 'success',
