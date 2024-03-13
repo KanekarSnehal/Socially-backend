@@ -1,9 +1,9 @@
-const { user: UserModel, follow: FollowModel } = require('../models');
-const { Op } = require('sequelize');
+const { user: userModel, follow: followModel } = require('../models');
+const { Op, Sequelize } = require('sequelize');
 
 async function findUserByEmailIdAndUserName(emailId, userName) {
     try {
-        const response = await UserModel.findOne({
+        const response = await userModel.findOne({
             where: {
                 [Op.or]: [
                     { email_id: emailId },
@@ -21,19 +21,19 @@ async function findUserByEmailIdAndUserName(emailId, userName) {
 
 async function findUserByUserName(userName) {
     try {
-        const response = await UserModel.findOne({
+        const response = await userModel.findOne({
             where: {
                 user_name: userName
             },
             attributes: ['email_id', 'profile_image', 'full_name', 'user_name', 'id', 'website', 'bio'],
             include: [
                 {
-                    model: FollowModel,
+                    model: followModel,
                     as: 'following',
                     attributes: ['following_user'],
                 },
                 {
-                    model: FollowModel,
+                    model: followModel,
                     as: 'follower',
                     attributes: ['following_user'],
                 },
@@ -48,7 +48,7 @@ async function findUserByUserName(userName) {
 
 async function updateUser(userName, userData) {
     try {
-        const response = await UserModel.update(
+        const response = await userModel.update(
             {
                 ...userData
             },
@@ -66,7 +66,7 @@ async function updateUser(userName, userData) {
 
 async function createUser(userDetails) {
     try {
-        const response = await UserModel.create(userDetails);
+        const response = await userModel.create(userDetails);
         return response;
     } catch (error) {
         console.log(`[user respository - createUser] Error: ${error}`);
@@ -74,12 +74,12 @@ async function createUser(userDetails) {
     }
 }
 
-async function getUsersToFollow(userId, search_key = '') {
+async function getUsersToFollow(userId, followingUsers, search_key = '') {
     const whereClause = {
         id: {
-            [Op.ne]: userId   // Exclude the current user from the result
+            [Op.notIn]: followingUsers.concat(userId)   // Exclude the current user from the result
         }
-    }
+    };
     if(search_key) {
         whereClause[Op.or] = [
             {
@@ -95,20 +95,9 @@ async function getUsersToFollow(userId, search_key = '') {
         ]
     }
     try {
-        const response = await UserModel.findAll({
-            include: {
-                model: FollowModel,
-                attributes: [],
-                required: false,
-                where: {
-                    current_user: userId,
-                    id: {
-                        [Op.is]: null   // Check for null values in the 'following' table
-                    }
-                }
-            },
-            attributes: ['profile_image', 'full_name', 'user_name', 'id', 'website', 'bio'],
+        const response = await userModel.findAll({
             where: whereClause,
+            attributes: ['profile_image', 'full_name', 'user_name', 'id', 'website', 'bio'],
         });
         return response;
     } catch (error) {
@@ -119,10 +108,10 @@ async function getUsersToFollow(userId, search_key = '') {
 
 async function followUnfollowUser(followUnfollowUserId, action, userId) {
     try {
-        const response = action == 'follow' ? await FollowModel.create({
+        const response = action == 'follow' ? await followModel.create({
             current_user: userId,
             following_user: followUnfollowUserId
-        }) : await FollowModel.destroy({
+        }) : await followModel.destroy({
             where: {
                 current_user: userId,
                 following_user: followUnfollowUserId
@@ -135,11 +124,27 @@ async function followUnfollowUser(followUnfollowUserId, action, userId) {
     }
 }
 
+async function getFollowingUsers(userId) {
+    try {
+        const response = await followModel.findAll({
+            where: {
+                current_user: userId
+            },
+            attributes: ['following_user'],
+        });
+        return response;
+    } catch (error) {
+        console.log(`[user respository - getFollowingUsers] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
 module.exports = {
     findUserByEmailIdAndUserName,
     findUserByUserName,
     createUser,
     getUsersToFollow,
     updateUser,
-    followUnfollowUser
+    followUnfollowUser,
+    getFollowingUsers
 }
