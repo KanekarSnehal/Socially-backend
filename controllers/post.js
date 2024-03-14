@@ -167,6 +167,36 @@ async function getPostByUserName(req, res) {
     }
 }
 
+async function getBookmarkedPosts(req, res) {
+    try {
+        const { user_id } = req.user;
+        const bookmarkedPosts = await postRepository.getBookmarkedPosts(user_id);
+        const postIds = bookmarkedPosts.map(p => p.post_id);
+        const likesData = await likeRepository.getLikesByPostId(postIds);
+
+        res.send({
+            status: 'success',
+            data: bookmarkedPosts.map(p => {
+                const post = p.post;
+                post.setDataValue('is_bookmarked', true);
+                if (likesData.some(ld => ld.post_id == post.id)) {
+                    post.setDataValue('is_liked', true);
+                    post.setDataValue('like_count', post.getDataValue('like_count') + 1);
+                }
+                else
+                    post.setDataValue('is_liked', false);
+                return post;
+            })
+        });
+    } catch (error) {
+        console.log(`[post controller - getBookmarkedPosts] Error: ${error}`);
+        res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'failure',
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     getPost,
     getFollowingUsersPost,
@@ -174,5 +204,6 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    getPostByUserName
+    getPostByUserName,
+    getBookmarkedPosts
 }

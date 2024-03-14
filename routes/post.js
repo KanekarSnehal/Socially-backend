@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const
     {
-        post: { getFollowingUsersPost, getExplorePost, getPost, createPost, updatePost, deletePost, getPostByUserName },
+        post: { getFollowingUsersPost, getExplorePost, getPost, createPost, updatePost, deletePost, getPostByUserName, getBookmarkedPosts },
         comment: { createComment, updateComment },
         like: { createLike, deleteLike },
         bookmark: { createBookmark, deleteBookmark }
@@ -10,7 +10,6 @@ const
 
 router.get('/following', getFollowingUsersPost);
 router.get('/explore', getExplorePost);
-router.get('/:id?', getPost);
 router.get('/user/:user_name', getPostByUserName)
 
 router.post('/', createPost);
@@ -27,7 +26,10 @@ router.delete('/:postId/comments/:commentId', updateComment);
 router.post('/:postId/like', createLike);
 router.delete('/:postId/dislike', deleteLike);
 
-router.post('/:postId/bookmark', createBookmark);
-router.delete('/:postId/unbookmark', deleteBookmark);
+router.get('/bookmarks', getBookmarkedPosts);
+router.post('/:postId/bookmarks', createBookmark);
+router.delete('/:postId/unbookmarks', deleteBookmark);
 
+// add route at end so that it doesn't conflict with other routes
+router.get('/:id?', getPost);
 module.exports = router;
