@@ -37,8 +37,8 @@ const Bookmark = sequelize.define('Bookmark', {
     }
 });
 
-Bookmark.belongsTo(Post, { foreignKey: 'post_id' });
-Post.hasMany(Bookmark, { foreignKey: 'post_id', onDelete: 'CASCADE' });
+Bookmark.belongsTo(Post, { foreignKey: 'post_id', as: 'post' });
+Post.hasMany(Bookmark, { foreignKey: 'post_id', onDelete: 'CASCADE', as: 'bookmarks' });
 
 Bookmark.belongsTo(User, { foreignKey: 'created_by', as: 'bookmarked_by' });
 User.hasMany(Bookmark, { foreignKey: 'created_by', onDelete: 'CASCADE' });
