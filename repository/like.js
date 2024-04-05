@@ -40,11 +40,15 @@ async function deleteLike(postId, likedBy) {
     }
 }
 
-async function getLikesByPostId(postIds) {
+async function getLikesByPostId(postIds, userId) {
     try {
+        const userIds = Array.isArray(userId) ? userId : [userId];
         const response = await likeModel.findAll({
             where: {
-                post_id: postIds
+                [Op.and]: [
+                    { post_id: postIds },
+                    { created_by: userIds }
+                ]
             },
             attributes: ['post_id', 'created_by']
         });

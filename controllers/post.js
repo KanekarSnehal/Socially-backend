@@ -28,20 +28,17 @@ async function getFollowingUsersPost(req, res) {
         const followingUsers = await userRepository.getFollowingUsers(user_id);
         const post = await postRepository.getFolllowingUsersPost(followingUsers.map(u => u.following_user));
         const postIds = post.map(p => p.id);
-        const likesData = await likeRepository.getLikesByPostId(postIds);
+        const likesData = await likeRepository.getLikesByPostId(postIds, user_id);
         const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds);
         post.forEach(p => {
             if (likesData.some(ld => ld.post_id == p.id)) {
                 p.setDataValue('is_liked', true);
-                p.setDataValue('like_count', p.getDataValue('like_count') + 1);
             }
             else
                 p.setDataValue('is_liked', false);
 
             if (bookmarkData.some(bd => bd.post_id == p.id)) {
                 p.setDataValue('is_bookmarked', true);
-                const bookmarkCount = p.getDataValue('bookmark_count');
-                bookmarkCount ? p.setDataValue('bookmark_count', bookmarkCount + 1) : p.setDataValue('bookmark_count', 1);
             }
             else
                 p.setDataValue('is_bookmarked', false);

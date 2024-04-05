@@ -1,4 +1,4 @@
-const { like: likeRepository } = require('../repository');
+const { like: likeRepository, post: postRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes');
 
 async function createLike(req, res) {
@@ -11,6 +11,12 @@ async function createLike(req, res) {
         });
 
         await likeRepository.createLike(postId, user_id);
+
+        // get post by id
+        const post = await postRepository.getPostById(postId);
+
+        post.setDataValue('like_count', post.like_count + 1);
+        await post.save();
 
         res.send({
             status: 'success',
@@ -35,6 +41,12 @@ async function deleteLike(req, res) {
         });
 
         await likeRepository.deleteLike(postId, user_id);
+
+        // get post by id
+        const post = await postRepository.getPostById(postId);
+
+        post.setDataValue('like_count', post.like_count - 1);
+        await post.save();
 
         res.send({
             status: 'success',

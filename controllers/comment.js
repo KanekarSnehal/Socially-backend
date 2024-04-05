@@ -1,4 +1,4 @@
-const { comment: commentRepository } = require('../repository');
+const { comment: commentRepository, post: postRepository } = require('../repository');
 const { StatusCodes } = require('../utils/statusCodes');
 
 async function createComment(req, res) {
@@ -12,6 +12,13 @@ async function createComment(req, res) {
         });
 
         await commentRepository.createComment(data[0].content, postId, user_id);
+
+        // get post by id
+        const post = await postRepository.getPostById(postId);
+
+        post.setDataValue('comment_count', post.comment_count + 1);
+        await post.save();
+
 
         res.send({
             status: 'success',
@@ -36,6 +43,14 @@ async function updateComment(req, res) {
         });
 
         action == 'update' ? await commentRepository.updateComment(data[0].content, commentId, postId) : await commentRepository.deleteComment(commentId, postId);
+
+        if(action != 'update') {
+            // get post by id
+            const post = await postRepository.getPostById(postId);
+
+            post.setDataValue('comment_count', post.comment_count - 1);
+            await post.save();
+        }
 
         res.send({
             status: 'success',

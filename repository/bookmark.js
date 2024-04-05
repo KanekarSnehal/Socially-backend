@@ -40,11 +40,15 @@ async function deleteBookmark(postId, bookMarkeddBy) {
     }
 }
 
-async function getBookmarksByPostId(postIds) {
+async function getBookmarksByPostId(postIds, userId) {
     try {
+        const userIds = Array.isArray(userId) ? userId : [userId];
         const response = await bookmarkModel.findAll({
             where: {
-                post_id: postIds
+                [Op.and]: [
+                    { post_id: postIds },
+                    { created_by: userIds }
+                ]
             },
             attributes: ['post_id', 'created_by']
         });

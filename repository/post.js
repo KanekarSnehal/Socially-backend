@@ -202,6 +202,16 @@ const getBookmarkedPosts = async (userId) => {
     }
 };
 
+async function incrementLikeCount(postId) {
+    try {
+        const response = await sequelize.query(`UPDATE posts SET like_count = like_count + 1 WHERE id = ${postId}`);
+        return response;
+    } catch (error) {
+        console.log(`[post respository - incrementLikeCount] Error: ${error}`);
+        throw Error(error);
+    }
+}
+
 module.exports = {
     getPostById,
     getPostByUserId,
@@ -211,5 +221,6 @@ module.exports = {
     updatePost,
     deletePost,
     getPostByUserName,
-    getBookmarkedPosts
+    getBookmarkedPosts,
+    incrementLikeCount
 }
