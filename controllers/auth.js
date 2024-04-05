@@ -60,7 +60,8 @@ async function loginHandler(req, res) {
                     email_id: user.email_id,
                     profile_image: user.profile_image,
                     full_name: user.full_name,
-                    user_name: user.user_name
+                    user_name: user.user_name,
+                    id: user.id
                 }
             }
         );
