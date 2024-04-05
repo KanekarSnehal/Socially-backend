@@ -48,11 +48,14 @@ async function updateUser(req, res) {
             message: 'action/data/userName is missing/invalid'
         });
 
-        const user = await userRepository.updateUser(userName, data[0]);
+        await userRepository.updateUser(userName, data[0]);
+
+        const user = await userRepository.findUserByUserName(userName);
 
         res.send({
             status: 'success',
-            message: 'User details updated successfully'
+            message: 'User details updated successfully',
+            data: user
         });
     } catch (error) {
         console.log(`[user controller - updateUser] Error: ${error}`);
