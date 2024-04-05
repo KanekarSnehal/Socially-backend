@@ -60,7 +60,8 @@ async function getFolllowingUsersPost(followingUsers) {
             ],
             where: {
                 created_by: followingUsers
-            }
+            },
+            order: [['created_at', 'DESC']]
         });
         return response;
     } catch (error) {
@@ -154,6 +155,7 @@ async function getPostByUserName(userName) {
                     ]
                 },
             ],
+            order: [['created_at', 'DESC']]
         });
         return response;
     } catch (error) {
@@ -194,6 +196,7 @@ const getBookmarkedPosts = async (userId) => {
                 },
             ],
             where: { created_by: userId },
+            order: [['created_at', 'DESC']]
         });
         return bookmarkedPosts;
     } catch (error) {
