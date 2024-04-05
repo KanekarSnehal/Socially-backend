@@ -29,7 +29,7 @@ async function getFollowingUsersPost(req, res) {
         const post = await postRepository.getFolllowingUsersPost(followingUsers.map(u => u.following_user));
         const postIds = post.map(p => p.id);
         const likesData = await likeRepository.getLikesByPostId(postIds, user_id);
-        const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds);
+        const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds, user_id);
         post.forEach(p => {
             if (likesData.some(ld => ld.post_id == p.id)) {
                 p.setDataValue('is_liked', true);
@@ -144,12 +144,30 @@ async function deletePost(req, res) {
 async function getPostByUserName(req, res) {
     try {
         const { user_name } = req.params;
+        const { user_id } = req.user;
         if (!user_name) return res.status(StatusCodes.BAD_REQUEST).json({
             status: 'failure',
             message: 'user_name is invalid'
         });
 
         const post = await postRepository.getPostByUserName(user_name);
+        const postIds = post.map(p => p.id);
+        const likesData = await likeRepository.getLikesByPostId(postIds, user_id);
+        const bookmarkData = await bookmarkRepository.getBookmarksByPostId(postIds, user_id);
+        post.forEach(p => {
+            if (likesData.some(ld => ld.post_id == p.id)) {
+                p.setDataValue('is_liked', true);
+            }
+            else
+                p.setDataValue('is_liked', false);
+
+            if (bookmarkData.some(bd => bd.post_id == p.id)) {
+                p.setDataValue('is_bookmarked', true);
+            }
+            else
+                p.setDataValue('is_bookmarked', false);
+        });
+
 
         res.send({
             status: 'success',
@@ -169,7 +187,7 @@ async function getBookmarkedPosts(req, res) {
         const { user_id } = req.user;
         const bookmarkedPosts = await postRepository.getBookmarkedPosts(user_id);
         const postIds = bookmarkedPosts.map(p => p.post_id);
-        const likesData = await likeRepository.getLikesByPostId(postIds);
+        const likesData = await likeRepository.getLikesByPostId(postIds, user_id);
 
         res.send({
             status: 'success',
@@ -178,7 +196,6 @@ async function getBookmarkedPosts(req, res) {
                 post.setDataValue('is_bookmarked', true);
                 if (likesData.some(ld => ld.post_id == post.id)) {
                     post.setDataValue('is_liked', true);
-                    post.setDataValue('like_count', post.getDataValue('like_count') + 1);
                 }
                 else
                     post.setDataValue('is_liked', false);
