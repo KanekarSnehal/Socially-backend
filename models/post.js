@@ -9,6 +9,7 @@ const Post = sequelize.define('Post', {
         autoIncrement: true
     },
     description: DataTypes.STRING,
+    image: DataTypes.STRING,
     like_count: {
         type: DataTypes.INTEGER.UNSIGNED,
         defaultValue: 0,

@@ -80,11 +80,12 @@ async function getExplorePost() {
     }
 }
 
-async function createPost(description, created_by) {
+async function createPost(description, image, created_by) {
     try {
         const response = await postModel.create(
             {
                 description,
+                image,
                 created_by
             }
         );

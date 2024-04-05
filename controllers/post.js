@@ -79,7 +79,7 @@ async function createPost(req, res) {
             message: 'action/data is missing in request body'
         });
 
-        await postRepository.createPost(data[0].description, user_id);
+        await postRepository.createPost(data[0].description, data[0].image, user_id);
 
         res.send({
             status: 'success',
