@@ -35,7 +35,7 @@ async function findUserByUserName(userName) {
                 {
                     model: followModel,
                     as: 'follower',
-                    attributes: ['following_user'],
+                    attributes: ['current_user'],
                 },
             ],
         });
