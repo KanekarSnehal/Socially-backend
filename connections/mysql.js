@@ -1,12 +1,12 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize({
-    dialect: 'mysql',
-    host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT,
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DB,
+    dialect: 'postgres',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     define: {
         freezeTableName: true,
         createdAt: 'created_at',
@@ -15,7 +15,7 @@ const sequelize = new Sequelize({
     }
 });
 
-if(process.env.DB_SYNC) {
+if(process.env.DB_SYNC == 'true') {
     sequelize.sync({force: true});
 };
 
