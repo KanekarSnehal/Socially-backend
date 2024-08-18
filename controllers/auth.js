@@ -2,7 +2,7 @@ const { StatusCodes } = require('../utils/statusCodes');
 const bcrypt = require('bcrypt');
 const { user: UserRepository } = require('../repository');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET_KEY, JWT_TOKEN_EXPIRY, BCRYPT_SALT } = require("../config/server");
+const { JWT_SECRET_KEY, JWT_TOKEN_EXPIRY, BCRYPT_SALT, BACKEND_URL } = require("../config/server");
 
 
 /**
@@ -44,10 +44,10 @@ async function loginHandler(req, res) {
         res.cookie('access-token', access_token, {
             expires: new Date(Date.now() + 86400000), // Cookie expiration date (in this case, 1 day)
             secure: true, // Send the cookie only over HTTPS
-            // httpOnly: true, // The cookie is inaccessible to JavaScript code in the browser
+            httpOnly: true, // The cookie is inaccessible to JavaScript code in the browser
             path: '/', // The path where the cookie is valid (e.g., '/' means it's valid for all routes)
             sameSite: 'None', // Restrict the cookie to same-site requests
-            domain: 'localhost'
+            domain: BACKEND_URL
         });
 
         res.set('Content-Type', 'application/json'); // Set the response header to JSON

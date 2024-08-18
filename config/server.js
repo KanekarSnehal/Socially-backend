@@ -10,5 +10,6 @@ module.exports = {
     JWT_TOKEN_EXPIRY: process.env.JWT_TOKEN_EXPIRY,
     JWT_REFRESH_TOKEN_EXPIRY: process.env.JWT_REFRESH_TOKEN_EXPIRY,
     BCRYPT_SALT: bcrypt.genSaltSync(10),
-    BCRYPT_ROUNDS: 10
+    BCRYPT_ROUNDS: process.env.BCRYPT_ROUNDS,
+    BACKEND_URL: process.env.BACKEND_URL
 }

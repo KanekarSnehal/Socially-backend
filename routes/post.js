@@ -16,9 +16,6 @@ router.post('/', createPost);
 router.post('/:id/edit', updatePost);
 router.delete('/:id', deletePost);
 
-// commented apis not required for now
-// router.get('/:postId/comments', getComment);
-// router.get('/:postId/comments/:commentId', getComment);
 router.post('/:postId/comments', createComment);
 router.post('/:postId/comments/:commentId', updateComment);
 router.delete('/:postId/comments/:commentId', updateComment);
